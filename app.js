@@ -9,7 +9,7 @@ var users = {};
 var port = process.env.PORT || 4000;
 
 server.listen(port, function() {
-  console.log("Server started");
+  console.log("Server started %s ", port);
 });
 
 app.use(express.static(__dirname + '/public'));
@@ -24,7 +24,8 @@ io.sockets.on('connection',function(socket){
 
       console.log("A New Connection Established");
 
-      socket.on('new user',function(data,callback){
+      socket.on('new user',function(data, callback){
+       
         if(data in users){
           console.log("Username already taken");
           callback(false);
