@@ -29,18 +29,20 @@ io.sockets.on('connection',function(socket){
         if(data in users){
           console.log("Username already taken");
           callback(false);
-        }else{
+        }
+        else{
           console.log("Username available");
           callback(true);
-          socket.nickname=data;
-          users[socket.nickname]=socket;
+
+          socket.nickname = data;
+          users[socket.nickname] = socket;
           updateNicknames();
         }
       });
 
 
       function updateNicknames(){
-        io.sockets.emit('usernames',Object.keys(users));
+        io.sockets.emit('usernames', Object.keys(users) );
       }
 
 
