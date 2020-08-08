@@ -4,7 +4,7 @@ var express = require('express'),
     io = require('socket.io').listen(server);
 
 
-var users = {};
+var users = {}; //used to store list of users
 
 var port = process.env.PORT || 4000;
 
@@ -12,7 +12,7 @@ server.listen(port, function() {
   console.log("Server started %s ", port);
 });
 
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/public')); //unsecured resourcess
 
 app.set('view engine','ejs');
 
@@ -22,19 +22,19 @@ app.get('/',function(req,res){
 
 io.sockets.on('connection',function(socket){
 
-      console.log("A New Connection Established");
+      console.log("A new Connection Established");
 
       socket.on('new user',function(data, callback){
        
         if(data in users){
           console.log("Username already taken");
-          callback(false);
+          callback(false);//calback with false value
         }
         else{
           console.log("Username available");
           callback(true);
 
-          socket.nickname = data;
+          socket.nickname = data; //username storing into socket
           users[socket.nickname] = socket;
           updateNicknames();
         }
@@ -51,7 +51,7 @@ io.sockets.on('connection',function(socket){
 
 
         if(msg.substr(0,1) === '@'){
-          msg=msg.substr(1);
+          msg = msg.substr(1);
           var ind=msg.indexOf(' ');
           if(ind !== -1){
             var name=msg.substring(0,ind);
@@ -63,15 +63,15 @@ io.sockets.on('connection',function(socket){
             }else{
               callback("Sorry, "+name+" is not online");
             }
-          }else{
+          }
+          else{
             callback("Looks like you forgot to write the message");
           }
 
-        }
-
-         else {
+          }
+        else {
           console.log("Got Message :"+data)
-          io.sockets.emit('new message',{msg:msg,nick:socket.nickname});
+          io.sockets.emit('new message',{ msg:msg, nick:socket.nickname });
         }
       });
 
